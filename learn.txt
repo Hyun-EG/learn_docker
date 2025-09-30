@@ -505,3 +505,69 @@ host모드로 네트워크를 만들 수 있는데,
 가상컴퓨터들이 내 실제 컴퓨터에서 돌아가는 프로그램처럼 네트워크 자원을 마구 사용할 수 있다.
 그 정도의 권한을 가져야하는 프로그램은 거의 없기 때문에 별로 쓸 일은 없다.
 
+[Volume 사용법과 PostgreSQL DB 띄우기]
+
+PostgreSQL 만들어져 있는 이미지 다운받고,
+
+실행할때, 환경변수 설정
+POSTGRES_USER , 값
+POSTGRES_PASSWORD , 값
+
+터미널로 입력하려면,
+docker run -d --name db-container -e POSTGRES_USER="유저값" -e POSTGRES_PASSWORD="비번값" postgres:17-alpine
+=> 명령어가 길고 더러워서 나중에 docker compose 배우면 된다.
+
+DB접속해보기
+postgres 를 설치하면서 psql이라는 프로그램이 함께 설치됐을것이다.
+이거를 쓰면 터미널에서 DB조작이 가능해진다.
+
+docker exec -it 컨테이너이름 /bin/sh
+
+psql로 DB 다루기
+
+psql -U 만든이름 -W
+=> 만든이름 자리에는 DB접속용아이디 입력하고 -W는 비번 확인하라는 뜻
+
+\l : 데이터베이스 리스트
+\c 데이터베이스명 : 거기로 접속
+\d : 안에 테이블 조회가능
+
+데이터는 volume 써야 유지가능
+
+- 컨테이너로 DB를 띄우면 문제가 있다.
+컨테이너를 껐다켜면 항상 안에 있던 내용이 초기화돼서 DB에 있던 데이터도 사라진다.
+이때 volume을 장착하면 데이터를 volume에 백업해놓을 수 있다.
+
+docker volume create 볼륨이름
+docker volume ls
+docker volume inspect 볼륨이름
+docker volume rm 볼륨이름
+
+=> 터미널에서 볼륨 생성, 삭제 가능
+차례로 볼륨 생성, 목록 , 상세보기 , 삭제 명령어
+
+volume 장착해서 DB컨테이너 띄우기
+
+docker run -v 볼륨이름:/var/lib/postgesql/data posgres:17-alpine
+=> 컨테이너에 볼륨을 장착하려면 -v 사용
+
+테이블 하나 만들고 안에 데이터 넣는법
+
+CREATE TABLE product ( title VARCHAR(100));
+INSERT INTO product VALUES ('shirt');
+SELECT * FROM product;
+
+bind mount
+
+볼륨은 docker에서 관리해주는 폴더같은 개념
+
+docker를 사용하지 않고 데스크탑 환경에서 만든 폴더를 볼륨으로 장찰할 수도 있다.
+volume 만들 때 로컬 폴더 경로를 넣어주면 된다.
+
+docker run -v /내컴퓨터폴더경로:/컨테이너경로 이미지명
+
+이것을 bind mount라고 부른다.
+
+해당 데이터를 주기적으로 백업해야되는 경우에는 bind mount 방식으로 쓰는게 나중에 데이터 찾을때 편리하다.
+
+=> 볼륨을 장착해서 내용을 암축하고 AWS에 업로드하는 별도의 이미지를 만들어서 실행해도 된다.
