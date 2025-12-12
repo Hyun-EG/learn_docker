@@ -1,4 +1,4 @@
-
+<img src="./KakaoTalk_20251212_181928626.gif"/>
 ![ezgif com-video-to-webp-converter](https://github.com/user-attachments/assets/05f93b57-aa55-461f-9526-d27a6d12fd6a)
 
 강의 정리. (출저: 코딩애플 DOCKER)
