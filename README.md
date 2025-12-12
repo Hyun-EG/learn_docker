@@ -1,4 +1,7 @@
 
+<img src="KakaoTalk_20251212_181928626.gif" alt=" dd" width="100%">
+<img src="ezgif.com-video-to-webp-converter.webp" alt=" dd" width="100%">
+
 강의 정리. (출저: 코딩애플 DOCKER)
 
 [이미지와 컨테이너 개념]
